@@ -1,0 +1,117 @@
+clc
+close all
+clear all
+
+%% Simulating Duffing Oscillator
+global gamma omega epsilon GAM OMEG
+
+gamma=0.3;  %Damping Coefficient
+omega=-1;    %Stiffness Coefficient k1
+epsilon=1;  %Stiffness Coefficient k2
+OMEG=1.25;  %Frequency of driving force
+
+% we get chaos and a strange attractor if the driving force GAM=1.5
+% Poincaré section is a complicated curve namely a fractal
+
+GAM=0.5;  %Amplitude of driving force
+h = 0.2;
+[t,trueTrajectory]=ode45(@duffing,0:2*pi/OMEG/100:4000,[0 1]);
+
+dst=t(1:6000);  %time
+obsNoise = 0.01; %Define observation noise level
+obs = trueTrajectory(:,1); %First state is observable
+obs = obs+obsNoise*randn(size(obs)); %Add noise
+
+% %Phase space
+% figure(1)
+% plot(yn,yv,'b')
+% axis tight
+% title('Phase Space')
+% xlabel('\theta (rad)')
+% ylabel('$\dot{\theta}$ (rad/s)','interpreter','latex')
+
+% %Poincare Section
+% figure(3)
+% for i=200:100:78000
+%      n=(i-100)/100;
+%      x1(n)=x(i,2);
+%      x2(n)=x(i,1);
+% end
+% plot(x1(:),x2(:),'*')
+% axis tight
+% title('Poincare')
+% xlabel('\theta (rad)')
+% ylabel('$\dot{\theta}$ (rad/s)','interpreter','latex')
+
+%% Applying Extended Kalman Filter
+%% Kalman Filter
+xbar=[1;1;1;1];
+xbarEstimate = [1;1;1;1]; %Initial state
+Gamma = .1*eye(length(xbar)); %Initial covariance
+varEstimate = diag(Gamma); %Initial state variance
+s1=0.01*sqrt(h)*randn; %Amplitude of perturbation term for k
+s2=1*sqrt(h)*randn; %Amplitude of perturbation term for b
+Aa = [0 1 0 0;-xbar(3)+3*xbar(1)^2 -xbar(4)/m -xbar(1)/m -xbar(2)/m ; 0 0 1+s1 0;0 0 0 1+s2];
+F = eye(length(xbar))+Aa*h+(Aa^2*h^2)/factorial(2)+(Aa^3*h^3)/factorial(3)+(Aa^4*h^4)/factorial(4)+(Aa^5*h^5)/factorial(5)+(Aa^6*h^6)/factorial(6); %State transition matrix
+G = [1 0 0 0]; %Observation function
+qs = 1e-3; %Covriance error spectral density
+C = eye(4).*qs; %Process Covariance Matrix
+D = 0.01; %Measurement Noise
+
+for i = 2:length(obs)
+ % Prediction step
+ xbar = F*xbar;
+ Gamma = F*Gamma*F' + C;
+ % Observation update
+ K = (Gamma*G')/(G*Gamma*G'+D); % aka K = ...
+ Gamma*G'*inv(G*Gamma*G'+D);
+ xbar = xbar + K*(obs(i) - G*xbar);
+ Gamma = Gamma - K*G*Gamma;
+ xbarEstimate(:,i) = xbar;
+ varEstimate(:,i) = diag(Gamma);
+end
+
+%% Position and velocity plot
+subplot(2,1,1);
+plot(time,trueTrajectory(:,1),'k','linewidth',2);
+hold on;
+plot(time,obs,'bo','markerfacecolor','b','markersize',3)
+plot(time,xbarEstimate(1,:),'r','linewidth',3);
+lower = xbarEstimate(1,:)+2*sqrt(varEstimate(1,:));
+upper = xbarEstimate(1,:)-2*sqrt(varEstimate(1,:));
+ciplot(lower,upper,time,'b')
+axis([0 30 ,-1 1.5])
+set(gca,'fontsize',10)
+legend 'True Trajectory' 'Simulated Noise' 'KF Estimate' 'Confidence Interval'
+title('Kalman Filtered Damped Spring Harmonic Oscillator')
+xlabel('Time (s)')
+ylabel('Position (m)')
+
+subplot(2,1,2)
+plot(time,trueTrajectory(:,2),'k','linewidth',3);
+hold on;
+plot(time,xbarEstimate(2,:),'r','linewidth',3);
+lower = xbarEstimate(1,:)+2*sqrt(varEstimate(1,:));
+upper = xbarEstimate(1,:)-2*sqrt(varEstimate(1,:));
+ciplot(xbarEstimate(2,:)+2*sqrt(varEstimate(2,:)),xbarEstimate(2,:)-2*sqrt(varEstimate(2,:)),time,'b')
+legend 'True Trajectory' 'KF Estimate' 'Confidence Interval'
+xlabel('Time (s)')
+ylabel('Velocity (m/s)')
+title('Estimated velocity')
+
+% %% Spring Constant and Damping coefficient plots
+% figure;subplot(2,1,1);
+% plot(time,k.*ones(1,length(time)),'r','linewidth',2); hold on;
+% plot(time,xbarEstimate(3,:),'linewidth',2);
+% legend 'True value' 'Estimated value';
+% title('Spring Constant')
+% xlabel('Time (s)'); ylabel('Estimated Spring Constant (k)')
+% K_estimate=mean(xbarEstimate(3,:))
+% 
+% subplot(2,1,2)
+% plot(time,b.*ones(1,length(time)),'r','linewidth',2); hold on;
+% plot(time,xbarEstimate(4,:),'linewidth',2);
+% legend 'True value' 'Estimated value';
+% title('Damping Coefficient')
+% xlabel('Time (s)'); ylabel('Estimated Damping Coefficient (b)')
+% B_estimate=mean(xbarEstimate(4,:))
