@@ -1,0 +1,93 @@
+%\documentclass[pra,hidepacs,floatfix,reqno,nofootinbib]{revtex4}
+\documentclass[12pt,twoside,a4]{article}
+\usepackage[usenames]{color}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{mathrsfs} % so we can use math script font for Hamiltonian symbol
+%\usepackage{chemsym}
+
+
+%%package selection to use font
+
+%%%%%%%%%text height and top margins
+
+\setlength\topmargin{-0.8in}
+\addtolength\textheight{2.4in}
+\addtolength{\oddsidemargin}{-0.4in}
+\addtolength{\evensidemargin}{-1in} \textwidth 6.6in
+
+%\setlength\topmargin{-0.5in}
+%\addtolength\textheight{2.4in}
+%\addtolength{\oddsidemargin}{-0.4in}
+%\addtolength{\evensidemargin}{-0.8in} \textwidth 6.3in
+%\addtolength{\evensidemargin}{-0.35in} \textwidth 5.8in
+
+%\renewcommand{\familydefault}{\sfdefault} %%%this works
+
+
+
+%%%making a new counter for the question numbering
+\newcounter{questioncounter}
+\newcounter{equestioncounter}
+
+\setlength\parskip{10pt} \setlength\parindent{0pt}
+%%%%%%%%%my own macro definitions
+
+%%%%%%%%%new commands defined here
+\newcommand{\question}{
+\stepcounter{questioncounter} {\textbf{Q} \arabic{questioncounter}.
+}}
+
+%%%experience question
+\newcommand{\equestion}{
+\stepcounter{equestioncounter} {\textbf{EQ}
+\arabic{equestioncounter}. }}
+
+%%%%new text macros defined here
+\newcommand{\ket}[1]{\ensuremath{|#1\rangle}}
+\newcommand{\bra}[1]{\ensuremath{\langle #1|}} \newcommand{\braket}[2]{\ensuremath{\langle #1|#2\rangle}}
+\newcommand{\qbox}[1]{\fcolorbox{SpringGreen}{SpringGreen}{#1}}
+\begin{document}
+
+\title{\textbf{Design and application of an Extended Kalman Filter in non-linear mechanics \\ Thesis Proposal}
+\author{Azeem Iqbal\\ Advisor: Dr. Muhammad Umar Suleman \\ External Advisor: Dr. Muhammad Sabieh Anwar}}
+%\pacs{03.67.Mn,03.67.Pp}
+%\begin{abstract}
+%\end{abstract}
+\maketitle
+% main text
+%%%start here%%%%%%
+
+
+
+{\section{Introduction}}
+As humans, we do several tasks that have gradually become an unconscious part of our lives. From the day a child is born, brain learns several key techniques that become the basis of its survival. The very well known five senses of sight, hearing, smell, taste and touch could be mentioned here. Although, all these senses amalgamate into abilities to learn, think, predict and correct knowledge and understanding. But there is just one ability that empowers humans to evolve over time and get better at doing various tasks that governs their living. This very ability still makes humans more precise and accurate in various simple tasks in comparison to a robot. This ability is called, "Estimation". Humans are built with an ability to estimate, measure and correct their predictions. Anytime when a human is walking down a hallway, the eyes and ears are noisy sensors that help estimate position, location and direction. While driving we consistently estimate object recognition on roads and track their position relative to us in order to avoid obstacles. Through estimation, we form predictions on our future decisions based upon previous experiences, and largely we are doing this in real-time, all the time. Similarly, in any experimental adventure, an experimenter consistently predicts, estimates, measures and validates the hypothesis. In order to do this there is an unavoidable need of signal processing to acquire meaningful data and involves use of special algorithms and electronic circuits called "Filters". They can be passive or active, analog or digital, high-pass, low-pass or band-pass. May operate in discrete-time (sampled) or continuous-time, may be linear or non-linear and have an infinite impulse response (IIR type) or finite impulse response (FIR type). In all cases, estimation empowers these filters to remove noise from the sensor data and predict and validate their parameters in linear or non-linear discrete or continuous time domain. One such modern filter that has the ability to predict and correct its existence is known as \textbf{Kalman Filter} and is extensively used in signal processing and noise removal for better accuracy and precision in data acquisition.
+
+
+
+
+{\section{Background of the study}
+In 1960, Rudolf E. Kálmán, proposed a linear quadratic estimation (LQE) technique \cite{kalman}. This technique involved a recursive algorithm that takes into account a series of measurements that are affected by varying statistical noise over time and then outputs an estimation of parameters that are more precise and accurate. The technique was named as "Kalman Filter". It is a self governing algorithm that transformed the world of signal processing and empowered researchers to develop highly sophisticated navigation systems, robotic systems, image processing and object tracking as well as economics and stock forecasting systems. It is pertinent to note here that conventional filters such as \textbf{Weiner Filter} had the same 
+
+
+
+\section{Statement of the problem}
+In an undergraduate experimental physics laboratory, students are involved in collecting data from low-cost home grown experimental hardware. Although the apparatus is manufactured using high tech equipment and power tools but still it is susceptible to producing noisy outputs and generate uncertain data. Various filtration techniques such as Baysian Filter,
+
+
+\section{Objectives of the study}
+
+
+\section{Discussion}
+
+\section{References}
+\begin{thebibliography}{99}
+\bibitem{kalman} R. E. Kalman, “A new approach to linear filtering and prediction problems,” Journal of Basic Engineering, vol. 82, no. 1, pp. 35–45, 1960.
+
+
+\end{thebibliography}
+
+\end{document}
