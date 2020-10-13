@@ -1,0 +1,31 @@
+clear all
+close all
+clc
+
+t=[1:12]; %No. of iterations
+weights=[158.0 164.2 160.3 159.9 162.1 164.6 169.6 167.4 166.4 171.0 171.2 172.6]; %Input Values
+weight=160; %Initial guess
+gain_rate=1;
+time_step = 1; %day
+scale_factor = 4/10;
+data = ones(4,1);
+
+for k=1:12
+    
+    prediction = weight + gain_rate*time_step; 
+    weight = prediction + (scale_factor * (weights(k) - prediction));
+    
+    %Saving Data
+    data(k,2)=prediction
+    data(k,3)=weight
+
+end
+
+%Plotting Data
+plot(t,weights,'o')
+hold on
+plot(t,prediction,'-r')
+xlabel('Time (s)')
+ylabel('Weight (lbs)')
+
+    
